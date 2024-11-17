@@ -11,9 +11,6 @@ env:
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, macos-latest ]
     permissions:
       contents: read
       packages: write
