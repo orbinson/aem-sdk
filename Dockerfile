@@ -1,13 +1,26 @@
-FROM azul/zulu-openjdk:11-jre-headless AS java-base-image
+FROM azul/zulu-openjdk:11-jre-headless as installer
 
-# Install lsof as it is added to the patched AEM stop script
-RUN apt-get update &&\
-  apt-get install -y --no-install-recommends lsof &&\
-  rm -rf /var/lib/apt/lists/*
+ARG AEMC_VERSION=1.9.0
+ARG PLATFORM=linux
+ARG ARCH=arm64
 
-# Installer layer to extract and start AEM
-FROM java-base-image AS installer
+EXPOSE 4502
 
 RUN apt-get update &&\
-  apt-get install -y --no-install-recommends ca-certificates curl jq lsof &&\
-  rm -rf /var/lib/apt/lists/* \
+  apt-get install -y --no-install-recommends curl
+
+RUN curl -L https://github.com/wttech/aemc/releases/download/v${AEMC_VERSION}/aemc-cli_${PLATFORM}_${ARCH}.tar.gz | tar -xz -C /usr/local/bin
+
+WORKDIR /opt
+
+COPY aem-start.sh /usr/local/bin/aem-start
+
+COPY aem-sdk-*.zip aem/home/lib/
+
+RUN chmod +x /usr/local/bin/aem-start
+
+ENV AEM_JAVA_HOME_DIR=$JAVA_HOME
+
+RUN aem instance -A launch && aem instance down
+
+CMD ["/usr/local/bin/aem-start"]
