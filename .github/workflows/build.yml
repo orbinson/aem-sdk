@@ -3,6 +3,7 @@ name: Create and publish a Docker image
 on:
   push:
     branches: ["main"]
+  workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
@@ -19,6 +20,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Checkout AEM SDK artifacts repository
+        uses: actions/checkout@v4
+        with:
+          name: orbinson/aem-sdk-artifacts
+          token: ${{ secrets.GITHUB_PRIVATE_TOKEN }} # Required for private repositories, setup with https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
