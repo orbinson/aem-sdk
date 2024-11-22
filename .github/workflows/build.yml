@@ -30,6 +30,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           name: orbinson/aem-sdk-artifacts
+          ref: main
           token: ${{ secrets.PRIVATE_TOKEN }}
           path: aem-sdk-artifacts
       - name: Pull SDK
