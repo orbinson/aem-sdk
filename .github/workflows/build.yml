@@ -31,12 +31,15 @@ jobs:
         with:
           name: orbinson/aem-sdk-artifacts
           ref: main
+          lfs: true
           token: ${{ secrets.PRIVATE_TOKEN }}
           path: aem-sdk-artifacts
       - name: Pull SDK
         run: |
           cd aem-sdk-artifacts
+          ls -la
           git lfs pull --include="aem-sdk-${{ env.AEM_SDK_VERSION }}.zip"
+          ls -la
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
