@@ -25,7 +25,6 @@ RUN chmod +x /usr/local/bin/aem-start
 
 ENV AEM_VENDOR_JAVA_HOME_DIR=$JAVA_HOME
 
-#RUN aem instance -A launch && aem instance down
+RUN aem instance -A launch && aem instance down
 
-#CMD ["/usr/local/bin/aem-start"]
-ENTRYPOINT ["/usr/local/bin/aem"]
+CMD ["/usr/local/bin/aem-start"]
