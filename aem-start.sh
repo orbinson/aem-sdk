@@ -1,12 +1,12 @@
 #!/usr/bin/env sh
 
 aem_stop() {
-    /usr/local/bin/aem instance -A stop
+    /usr/local/bin/aem instance --instance-${RUNMODE} stop
     exit 0
 }
 
 trap aem_stop INT TERM
 
-/usr/local/bin/aem instance -A start
+/usr/local/bin/aem instance --instance-${RUNMODE} start
 
-tail -F /opt/aem/home/var/instance/author/crx-quickstart/logs/error.log
+tail -F /opt/aem/home/var/instance/${RUNMODE}/crx-quickstart/logs/error.log
