@@ -29,14 +29,13 @@ jobs:
       - name: Checkout AEM SDK artifacts repository
         uses: actions/checkout@v4
         with:
-          name: orbinson/aem-sdk-artifacts
+          repository: orbinson/aem-sdk-artifacts
           ref: main
           lfs: true
           token: ${{ secrets.PRIVATE_TOKEN }}
           path: aem-sdk-artifacts
       - name: Pull SDK
         run: |
-          ls -la
           cd aem-sdk-artifacts
           ls -la
           git lfs pull --include="aem-sdk-${{ env.AEM_SDK_VERSION }}.zip"
