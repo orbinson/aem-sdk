@@ -62,6 +62,9 @@ jobs:
           platforms: linux/amd64
           # TODO: for multi platform use: linux/amd64,linux/arm64
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            RUNMODE=${{ matrix.runmode }}
+            PORT=${{ matrix.runmode == 'author' && '4502' || '4503' }}
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v1
         with:
