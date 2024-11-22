@@ -24,20 +24,18 @@ jobs:
       - name: Cache SDK
         uses: actions/cache@v4
         with:
-          path: aem-sdk-${{ env.AEM_SDK_VERSION }}.zip
+          path: aem-sdk-artifacts
           key: aem-sdk-${{ env.AEM_SDK_VERSION }}.zip
-      - name: Download SDK
+      - name: Checkout AEM SDK artifacts repository
+        uses: actions/checkout@v4
+        with:
+          name: orbinson/aem-sdk-artifacts
+          token: ${{ secrets.PRIVATE_TOKEN }}
+          path: aem-sdk-artifacts
+      - name: Pull SDK
         run: |
-          if ! [ -f aem-sdk-${{ env.AEM_SDK_VERSION }}.zip ]; then
-            touch aem-sdk-${{ env.AEM_SDK_VERSION }}.zip
-          else
-            ls -la
-          fi
-#      - name: Checkout AEM SDK artifacts repository
-#        uses: actions/checkout@v4
-#        with:
-#          name: orbinson/aem-sdk-artifacts
-#          token: ${{ secrets.GITHUB_PRIVATE_TOKEN }} # Required for private repositories, setup with https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line
+          cd aem-sdk-artifacts
+          git lfs pull --include="aem-sdk-${{ env.AEM_SDK_VERSION }}.zip"
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx

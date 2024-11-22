@@ -19,7 +19,7 @@ WORKDIR /opt
 
 COPY aem-start.sh /usr/local/bin/aem-start
 
-#COPY aem-sdk-*.zip aem/home/lib/
+COPY aem-sdk-artifacts/aem-sdk-*.zip aem/home/lib/
 
 RUN chmod +x /usr/local/bin/aem-start
 
