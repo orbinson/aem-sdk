@@ -36,6 +36,7 @@ jobs:
           path: aem-sdk-artifacts
       - name: Pull SDK
         run: |
+          ls -la
           cd aem-sdk-artifacts
           ls -la
           git lfs pull --include="aem-sdk-${{ env.AEM_SDK_VERSION }}.zip"
