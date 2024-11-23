@@ -30,4 +30,6 @@ COPY aem-sdk-artifacts/aem-sdk-*.zip aem/home/lib/
 
 RUN aem instance --instance-${RUNMODE} launch && aem instance down
 
+HEALTHCHECK CMD /usr/local/bin/aem instance --instance-${RUNMODE} await
+
 CMD ["/usr/local/bin/aem-start"]
