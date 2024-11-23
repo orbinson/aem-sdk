@@ -2,7 +2,7 @@ FROM azul/zulu-openjdk:11-jre-headless as installer
 
 ARG AEMC_VERSION=2.0.1
 ARG TARGETOS=linux
-ARG TARGETARCH=arm64
+ARG TARGETARCH=amd64
 
 RUN apt-get update &&\
   apt-get install -y --no-install-recommends curl
