@@ -7,8 +7,10 @@ aem_stop() {
 
 trap aem_stop INT TERM EXIT
 
-ln -sf /proc/1/fd/1 /opt/aem/home/var/instance/${RUNMODE}/crx-quickstart/logs/error.log
+# link stdout to container output
+ln -sf /proc/1/fd/1 /opt/aem/home/var/instance/${RUNMODE}/crx-quickstart/logs/stdout.log
 
 /usr/local/bin/aem instance --instance-${RUNMODE} start
 
-(cat)
+# tail error log in subshell to keep container running and allow for graceful shutdown
+(tail -F /opt/aem/home/var/instance/${RUNMODE}/crx-quickstart/logs/error.log)

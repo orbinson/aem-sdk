@@ -43,4 +43,5 @@ instance:
         - --add-opens=java.base/java.net=ALL-UNNAMED
         - -Dnashorn.args=--no-deprecation-warning"
         - -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=[[.Env.AEM_PUBLISH_DEBUG_ADDR | default "0.0.0.0:14503" ]]
-
+  check:
+    done_threshold: 1
