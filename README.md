@@ -43,7 +43,7 @@ docker build . -t aem-sdk:author
 And run the image
 
 ```shell
-docker run -p 4502:4502 aem-sdk:author
+docker run -p 4502:4502 -p 5005:14502 aem-sdk:author
 ```
   
 To build the publish image, you need to specify the correct build arguments.
@@ -58,5 +58,5 @@ docker build \
 And run the image
 
 ```shell
-docker run -p 4503:4503 aem-sdk:publish
+docker run -p 4503:4503 -p 5006:14504 aem-sdk:publish
 ```

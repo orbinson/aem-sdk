@@ -1,6 +1,6 @@
-FROM azul/zulu-openjdk:11-jre-headless as installer
+FROM azul/zulu-openjdk:11-jre-headless AS installer
 
-ARG AEMC_VERSION=2.0.1
+ARG AEMC_VERSION=2.0.3
 ARG TARGETOS=linux
 ARG TARGETARCH=amd64
 
@@ -23,13 +23,14 @@ EXPOSE ${PORT}
 
 WORKDIR /opt
 
-COPY aem-start.sh /usr/local/bin/aem-start
-RUN chmod +x /usr/local/bin/aem-start
-
 COPY aem-sdk-artifacts/aem-sdk-*.zip aem/home/lib/
+COPY aem/default/etc/aem.yml aem/default/etc/aem.yml
 
 RUN aem instance --instance-${RUNMODE} launch && aem instance down
 
 HEALTHCHECK CMD /usr/local/bin/aem instance --instance-${RUNMODE} await
+
+COPY aem-start.sh /usr/local/bin/aem-start
+RUN chmod +x /usr/local/bin/aem-start
 
 CMD ["/usr/local/bin/aem-start"]

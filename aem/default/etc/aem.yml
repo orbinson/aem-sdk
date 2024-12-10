@@ -1,0 +1,46 @@
+instance:
+  config:
+    local_author:
+      active: [[.Env.AEM_AUTHOR_ACTIVE | default true ]]
+      http_url: [[.Env.AEM_AUTHOR_HTTP_URL | default "http://127.0.0.1:4502" ]]
+      user: [[.Env.AEM_AUTHOR_USER | default "admin" ]]
+      password: [[.Env.AEM_AUTHOR_PASSWORD | default "admin" ]]
+      run_modes: [ local ]
+      jvm_opts:
+        - -server
+        - -Xms2048m
+        - -Xmx2048m
+        - -Djava.awt.headless=true
+        - -XX:+CMSClassUnloadingEnabled
+        - -XX:+UseParallelGC
+        - --add-opens=java.desktop/com.sun.imageio.plugins.jpeg=ALL-UNNAMED
+        - --add-opens=java.base/sun.net.www.protocol.jrt=ALL-UNNAMED
+        - --add-opens=java.naming/javax.naming.spi=ALL-UNNAMED
+        - --add-opens=java.xml/com.sun.org.apache.xerces.internal.dom=ALL-UNNAMED
+        - --add-opens=java.base/java.lang=ALL-UNNAMED
+        - --add-opens=java.base/jdk.internal.loader=ALL-UNNAMED
+        - --add-opens=java.base/java.net=ALL-UNNAMED
+        - -Dnashorn.args=--no-deprecation-warning"
+        - -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=[[.Env.AEM_AUTHOR_DEBUG_ADDR | default "0.0.0.0:14502" ]]
+    local_publish:
+      active: [[.Env.AEM_PUBLISH_ACTIVE | default true ]]
+      http_url: [[.Env.AEM_PUBLISH_HTTP_URL | default "http://127.0.0.1:4503" ]]
+      user: [[.Env.AEM_PUBLISH_USER | default "admin" ]]
+      password: [[.Env.AEM_PUBLISH_PASSWORD | default "admin" ]]
+      run_modes: [ local ]
+      jvm_opts:
+        - -server
+        - -Xms2048m
+        - -Xmx2048m
+        - -XX:+CMSClassUnloadingEnabled
+        - -XX:+UseParallelGC
+        - --add-opens=java.desktop/com.sun.imageio.plugins.jpeg=ALL-UNNAMED
+        - --add-opens=java.base/sun.net.www.protocol.jrt=ALL-UNNAMED
+        - --add-opens=java.naming/javax.naming.spi=ALL-UNNAMED
+        - --add-opens=java.xml/com.sun.org.apache.xerces.internal.dom=ALL-UNNAMED
+        - --add-opens=java.base/java.lang=ALL-UNNAMED
+        - --add-opens=java.base/jdk.internal.loader=ALL-UNNAMED
+        - --add-opens=java.base/java.net=ALL-UNNAMED
+        - -Dnashorn.args=--no-deprecation-warning"
+        - -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=[[.Env.AEM_PUBLISH_DEBUG_ADDR | default "0.0.0.0:14503" ]]
+
