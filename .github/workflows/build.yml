@@ -89,10 +89,10 @@ jobs:
           registry: ${{ env.registry }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Push manifest to registry
+      - name: Create and push manifest to registry
         run: |
           IMAGE=${{ env.registry }}/${{ github.repository }}:${{ matrix.runmode }}-${{ env.aem_sdk_version }}
-          docker manifest create \
-              ${IMAGE} \
+          docker manifest create ${IMAGE} \
               --amend ${IMAGE}-amd64 \
               --amend ${IMAGE}-arm64
+          docker manifest push ${IMAGE}
