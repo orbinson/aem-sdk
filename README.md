@@ -37,7 +37,7 @@ mv ~/Downloads/aem-sdk-*.zip aem-sdk-artifacts/
 Afterward you can build the image, by default and author is built.
 
 ```shell
-docker build . -t aem-sdk:author
+docker buildx . -t aem-sdk:author
 ```
 
 And run the image
@@ -49,7 +49,7 @@ docker run -p 4502:4502 -p 5005:14502 aem-sdk:author
 To build the publish image, you need to specify the correct build arguments.
 
 ```shell
-docker build \
+docker buildx \
   --build-arg RUNMODE=publish \
   --build-arg PORT=4503 \
   . -t aem-sdk:publish
