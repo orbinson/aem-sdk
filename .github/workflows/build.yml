@@ -66,13 +66,13 @@ jobs:
           build-args: |
             RUNMODE=${{ matrix.runmode }}
             PORT=${{ matrix.runmode == 'author' && '4502' || '4503' }}
-      - name: Generate artifact attestation
-        if: github.ref == 'refs/heads/main'
-        uses: actions/attest-build-provenance@v1
-        with:
-          subject-name: ${{ env.registry }}/${{ github.repository }}
-          subject-digest: ${{ steps.push.outputs.digest }}
-          push-to-registry: true
+#      - name: Generate artifact attestation
+#        if: github.ref == 'refs/heads/main'
+#        uses: actions/attest-build-provenance@v1
+#        with:
+#          subject-name: ${{ env.registry }}/${{ github.repository }}
+#          subject-digest: ${{ steps.push.outputs.digest }}
+#          push-to-registry: true
 
   manifest:
     name: Create manifest
