@@ -68,14 +68,8 @@ jobs:
             RUNMODE=${{ matrix.runmode }}
             PORT=${{ matrix.runmode == 'author' && '4502' || '4503' }}
       - name: Push image to registry
-        run: docker push ${{ env.registry }}/${{ github.repository }}:${{ matrix.runmode }}-${{ env.aem_sdk_version }}-${{ matrix.arch }}
-      - name: Generate artifact attestation
         if: github.ref_name == github.event.repository.default_branch
-        uses: actions/attest-build-provenance@v2
-        with:
-          subject-name: ${{ env.registry }}/${{ github.repository }}
-          subject-digest: ${{ steps.push.outputs.digest }}
-          push-to-registry: true
+        run: docker push ${{ env.registry }}/${{ github.repository }}:${{ matrix.runmode }}-${{ env.aem_sdk_version }}-${{ matrix.arch }}
 
   manifest:
     name: Create manifest
