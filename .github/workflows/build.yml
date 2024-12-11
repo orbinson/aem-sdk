@@ -9,7 +9,6 @@ env:
 jobs:
   build-images:
     name: Build images
-    id: build-images
     permissions:
       contents: read
       packages: write
