@@ -59,8 +59,7 @@ jobs:
           context: .
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}:${{ matrix.runmode }}-${{ env.AEM_SDK_VERSION }}
-          platforms: linux/amd64
-          # TODO: for multi platform use: linux/amd64,linux/arm64
+          platforms: linux/amd64,linux/arm64
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             RUNMODE=${{ matrix.runmode }}
