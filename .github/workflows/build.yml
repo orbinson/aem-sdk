@@ -54,7 +54,7 @@ jobs:
         with:
           images: ${{ env.registry }}/${{ github.repository }}
       - name: Build and push docker image
-        id: push
+        id: build-push-image
         uses: docker/build-push-action@v3
         with:
           context: .
@@ -66,10 +66,17 @@ jobs:
             RUNMODE=${{ matrix.runmode }}
             PORT=${{ matrix.runmode == 'author' && '4502' || '4503' }}
       - name: Generate artifact attestation
-        if: github.ref == 'refs/heads/develop'
+        if: github.ref == 'refs/heads/main'
         uses: actions/attest-build-provenance@v1
         with:
           subject-name: ${{ env.registry }}/${{ github.repository }}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
-
+      - name: Push manifest to registry
+        if: github.ref == 'refs/heads/main'
+        run: |
+          IMAGE=${{ env.registry }}/${{ github.repository }}:${{ matrix.runmode }}-${{ env.aem_sdk_version }}
+          docker manifest create \
+              ${IMAGE} \
+              --amend ${IMAGE}-amd64 \
+              --amend ${IMAGE}-arm64
