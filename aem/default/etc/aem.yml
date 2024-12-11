@@ -45,3 +45,4 @@ instance:
         - -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=[[.Env.AEM_PUBLISH_DEBUG_ADDR | default "0.0.0.0:14503" ]]
   check:
     done_threshold: 1
+    await_started: 60m
