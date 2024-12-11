@@ -43,7 +43,7 @@ jobs:
         with:
           platforms: linux/${{ matrix.arch }}
       - name: Log in to container registry
-        if: github.ref_name == 'main'
+        if: github.ref_name == github.event.repository.default_branch
         uses: docker/login-action@v3
         with:
           registry: ${{ env.registry }}
@@ -59,7 +59,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: ${{ github.ref_name == 'main' }}
+          push: ${{ github.ref_name == github.event.repository.default_branch }}
           tags: ${{ env.registry }}/${{ github.repository }}:${{ matrix.runmode }}-${{ env.aem_sdk_version }}-${{ matrix.arch }}
           platforms: linux/${{ matrix.arch }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -70,7 +70,7 @@ jobs:
       - name: Push manifest to registry
         run: docker push ${{ env.registry }}/${{ github.repository }}:${{ matrix.runmode }}-${{ env.aem_sdk_version }}-${{ matrix.arch }}
       - name: Generate artifact attestation
-        if: github.ref_name == 'main'
+        if: github.ref_name == github.event.repository.default_branch
         uses: actions/attest-build-provenance@v2
         with:
           subject-name: ${{ env.registry }}/${{ github.repository }}
@@ -79,7 +79,7 @@ jobs:
 
   manifest:
     name: Create manifest
-    if: github.ref_name == 'main'
+    if: github.ref_name == github.event.repository.default_branch
     permissions:
       packages: write
       id-token: write
