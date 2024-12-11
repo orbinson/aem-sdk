@@ -1,19 +1,14 @@
 name: Create and publish AEM images
 
-on:
-  push:
-    branches: ["main"]
-  workflow_dispatch:
+on: [ push ]
 
 env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-  AEM_SDK_VERSION: 2024.10.18459.20241031T210302Z-241000
+  registry: ghcr.io
+  aem_sdk_version: 2024.10.18459.20241031T210302Z-241000
 
 jobs:
-  build-and-push-image:
-    name: Build and push AEM image
-    runs-on: ubuntu-latest
+  build-images:
+    name: Build images
     permissions:
       contents: read
       packages: write
@@ -21,16 +16,20 @@ jobs:
       id-token: write
     strategy:
       matrix:
-        runmode: ["author", "publish"]
+        arch: [ arm64, amd64 ]
+        runmode: [ author, publish ]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Cache SDK
         uses: actions/cache@v4
+        id: cache-sdk
         with:
           path: aem-sdk-artifacts
-          key: aem-sdk-${{ env.AEM_SDK_VERSION }}.zip
+          key: aem-sdk-${{ env.aem_sdk_version }}.zip
       - name: Checkout AEM SDK artifacts repository
+        if: steps.cache-sdk.outputs.cache-hit != 'true'
         uses: actions/checkout@v4
         with:
           repository: orbinson/aem-sdk-artifacts
@@ -41,33 +40,62 @@ jobs:
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      - name: Log in to the Container registry
+        with:
+          platforms: linux/${{ matrix.arch }}
+      - name: Log in to the container registry
+        if: github.ref == 'refs/heads/main'
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
+          registry: ${{ env.registry }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.registry }}/${{ github.repository }}
       - name: Build and push docker image
-        id: push
+        id: build-push-image
         uses: docker/build-push-action@v3
         with:
           context: .
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}:${{ matrix.runmode }}-${{ env.AEM_SDK_VERSION }}
-          platforms: linux/amd64,linux/arm64
+          push: ${{ github.ref == 'refs/heads/main' }}
+          tags: ${{ env.registry }}/${{ github.repository }}:${{ matrix.runmode }}-${{ env.aem_sdk_version }}-${{ matrix.arch }}
+          platforms: linux/${{ matrix.arch }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             RUNMODE=${{ matrix.runmode }}
             PORT=${{ matrix.runmode == 'author' && '4502' || '4503' }}
       - name: Generate artifact attestation
+        if: github.ref == 'refs/heads/main'
         uses: actions/attest-build-provenance@v1
         with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
+          subject-name: ${{ env.registry }}/${{ github.repository }}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
 
+  manifest:
+    name: Create manifest
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      packages: write
+      id-token: write
+    strategy:
+      matrix:
+        arch: [ arm64, amd64 ]
+    runs-on: ubuntu-latest
+    needs: build-images
+    steps:
+      - name: Log in to the container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.registry }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push manifest to registry
+        run: |
+          IMAGE=${{ env.registry }}/${{ github.repository }}:${{ matrix.runmode }}-${{ env.aem_sdk_version }}
+          docker manifest create \
+              ${IMAGE} \
+              --amend ${IMAGE}-amd64 \
+              --amend ${IMAGE}-arm64

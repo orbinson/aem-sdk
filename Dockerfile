@@ -1,6 +1,5 @@
 FROM azul/zulu-openjdk:11-jre-headless
 
-ARG TARGETOS
 ARG TARGETARCH
 
 ARG AEMC_VERSION=2.0.3
@@ -19,7 +18,7 @@ RUN apt-get update &&\
   apt-get install -y --no-install-recommends curl &&\
   apt-get clean &&\
   rm -rf /var/cache/apk/* &&\
-  curl -L https://github.com/wttech/aemc/releases/download/v${AEMC_VERSION}/aemc-cli_${TARGETOS}_${TARGETARCH}.tar.gz | tar -xz -C /usr/local/bin
+  curl -L https://github.com/wttech/aemc/releases/download/v${AEMC_VERSION}/aemc-cli_linux_${TARGETARCH}.tar.gz | tar -xz -C /usr/local/bin
 
 COPY aem-sdk-artifacts/aem-sdk-*.zip aem/home/lib/
 COPY aem/default/etc/aem.yml aem/default/etc/aem.yml
