@@ -67,7 +67,7 @@ jobs:
           build-args: |
             RUNMODE=${{ matrix.runmode }}
             PORT=${{ matrix.runmode == 'author' && '4502' || '4503' }}
-      - name: Push manifest to registry
+      - name: Push image to registry
         run: docker push ${{ env.registry }}/${{ github.repository }}:${{ matrix.runmode }}-${{ env.aem_sdk_version }}-${{ matrix.arch }}
       - name: Generate artifact attestation
         if: github.ref_name == github.event.repository.default_branch
