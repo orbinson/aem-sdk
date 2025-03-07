@@ -2,7 +2,7 @@ FROM azul/zulu-openjdk:11-jre-headless
 
 ARG TARGETARCH
 
-ARG AEMC_VERSION=2.0.3
+ARG AEMC_VERSION=2.0.5
 ARG RUNMODE=author
 ARG PORT=4502
 
@@ -29,5 +29,7 @@ COPY aem-start.sh /usr/local/bin/aem-start
 RUN chmod +x /usr/local/bin/aem-start
 
 HEALTHCHECK CMD /usr/bin/curl -f http://localhost:${PORT}/systemready
+
+WORKDIR /opt/aem/home/var/instance/${RUNMODE}/crx-quickstart
 
 CMD ["/usr/local/bin/aem-start"]
