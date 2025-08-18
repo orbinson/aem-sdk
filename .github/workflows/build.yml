@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Cache SDK
         uses: actions/cache@v4
         id: cache-sdk
@@ -30,7 +30,7 @@ jobs:
           key: aem-sdk-${{ env.aem_sdk_version }}.zip
       - name: Checkout AEM SDK artifacts repository
         if: steps.cache-sdk.outputs.cache-hit != 'true'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: orbinson/aem-sdk-artifacts
           lfs: true
